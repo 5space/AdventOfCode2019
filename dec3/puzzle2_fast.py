@@ -30,7 +30,7 @@ minsum = 99999999
 for line1 in pts1:
     for line2 in pts2:
         if line1[2] != line2[2]:
-            if line1[2] == True:
+            if line1[2]:
                 if line1[0][0] < line2[0][0] < line1[1][0] and line2[0][1] < line1[0][1] < line2[1][1]:
                     currsum = line1[4] + line2[4] + (line2[0][0]-line1[0][0]
                     if line1[3] else line1[1][0]-line2[0][0]) + (line1[0][1]-line2[0][1]
