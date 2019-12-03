@@ -27,7 +27,7 @@ pts1, pts2 = plot(l1), plot(l2)
 intersections = []
 for line1 in pts1:
     for line2 in pts2:
-        if set([line1[2], line2[2]]) == {True, False}:
+        if line1[2] != line2[2]:
             if line1[2] == True:
                 if line1[0][0] < line2[0][0] < line1[1][0] and line2[0][1] < line1[0][1] < line2[1][1]:
                     intersections.append((line2[0][0], line1[0][1]))
