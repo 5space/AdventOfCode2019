@@ -1,5 +1,3 @@
-import time
-
 with open("dec3/input.txt", "r") as file:
     l1, l2 = file.readlines()
     l1 = l1.split(",")
@@ -29,11 +27,7 @@ def plot(directions):
             curr[1] += num
     return points
 
-start = time.time()
-
 pts1, pts2 = plot(l1), plot(l2)
 k = set(pts1).intersection(set(pts2))
 k.remove((0, 0))
 print(min(abs(x)+abs(y) for (x, y) in k))
-
-print(time.time()-start)
