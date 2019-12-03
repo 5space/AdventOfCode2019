@@ -28,6 +28,6 @@ def plot(directions):
     return points
 
 pts1, pts2 = plot(l1), plot(l2)
-k = set(pts1).intersection(set(pts2))
+k = set(pts1) & set(pts2)
 k.remove((0, 0))
 print(min(pts1.index(n)+pts2.index(n) for n in k))
