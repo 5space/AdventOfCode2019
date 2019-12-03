@@ -4,35 +4,34 @@ with open("dec3/input.txt", "r") as file:
     l2 = l2.split(",")
 
 def plot(directions):
-    lines = []
+    v, h = [], []
     curr = (0, 0)
     for p in directions:
         d, num = p[0], p[1:]
         num = int(num)
         if d == "R":
-            lines.append((curr, (curr[0]+num, curr[1]), True))
+            h.append((curr, (curr[0]+num, curr[1])))  # (point1, point2, orientation)
             curr = (curr[0]+num, curr[1])
         elif d == "L":
-            lines.append(((curr[0]-num, curr[1]), curr, True))
+            h.append(((curr[0]-num, curr[1]), curr))
             curr = (curr[0]-num, curr[1])
         elif d == "U":
-            lines.append(((curr[0], curr[1]-num), curr, False))
+            v.append(((curr[0], curr[1]-num), curr))
             curr = (curr[0], curr[1]-num)
         elif d == "D":
-            lines.append((curr, (curr[0], curr[1]+num), False))
+            v.append((curr, (curr[0], curr[1]+num)))
             curr = (curr[0], curr[1]+num)
-    return lines
+    return (v, h)
 
 pts1, pts2 = plot(l1), plot(l2)
 intersections = []
-for line1 in pts1:
-    for line2 in pts2:
-        if line1[2] != line2[2]:
-            if line1[2]:
-                if line1[0][0] < line2[0][0] < line1[1][0] and line2[0][1] < line1[0][1] < line2[1][1]:
-                    intersections.append((line2[0][0], line1[0][1]))
-            else:
-                if line2[0][0] < line1[0][0] < line2[1][0] and line1[0][1] < line2[0][1] < line1[1][1]:
-                    intersections.append((line1[0][0], line2[0][1]))
+for line1 in pts1[0]:
+    for line2 in pts2[1]:
+        if line2[0][0] < line1[0][0] < line2[1][0] and line1[0][1] < line2[0][1] < line1[1][1]:
+            intersections.append((line1[0][0], line2[0][1]))
+for line1 in pts2[0]:
+    for line2 in pts1[1]:
+        if line2[0][0] < line1[0][0] < line2[1][0] and line1[0][1] < line2[0][1] < line1[1][1]:
+            intersections.append((line1[0][0], line2[0][1]))
 
 print(min(abs(x)+abs(y) for (x, y) in intersections))
