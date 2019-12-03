@@ -1,3 +1,6 @@
+import time
+
+start = time.time()
 with open("dec3/input.txt", "r") as file:
     l1, l2 = file.readlines()
     l1 = l1.split(",")
@@ -45,3 +48,4 @@ for line1 in pts2[0]:
                 minsum = currsum
 
 print(minsum)
+print(int((time.time() - start)*1000), "ms")
