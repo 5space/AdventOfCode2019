@@ -1,4 +1,4 @@
-with open("input.txt", "r") as file:
+with open("dec1/input.txt", "r") as file:
     modules = map(int, file.readlines())
 
 def fuel(mass):
