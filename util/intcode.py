@@ -59,10 +59,10 @@ OPCODES = {1: [opcode1, 3],
 
 class IntCode:
 
-    def __init__(self, memory, inp=[], ops=OPCODES):
+    def __init__(self, memory, inp=None, ops=OPCODES):
         self.ops = ops
         self.memory = memory
-        self.inp = inp
+        self.inp = inp or []
         self.out = []
         self.pointer = 0
         self.skip = True
