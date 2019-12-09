@@ -1,5 +1,5 @@
 with open("dec8/input.txt", "r") as file:
-    k = list(map(int, list(file.read().strip())))
+    k = list(map(int, list(file.read())))
 
 layers = [k[n:n+150] for n in range(0, len(k), 150)]
 zeroes = 100
