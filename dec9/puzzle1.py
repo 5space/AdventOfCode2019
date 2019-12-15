@@ -1,6 +1,6 @@
 import sys, os, timeit
 sys.path.append(os.getcwd())
-from util.intcode_new import IntCode
+from util.intcode import IntCode
 
 def main():
     with open("dec9/input.txt", "r") as file:

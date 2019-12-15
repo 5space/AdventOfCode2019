@@ -1,123 +1,34 @@
 def add(i, args, modes):
-    if modes[0] == 0:
-        a = i.get(args[0])
-    elif modes[0] == 1:
-        a = args[0]
-    elif modes[0] == 2:
-        a = i.get(args[0]+i.relative)
-    if modes[1] == 0:
-        b = i.get(args[1])
-    elif modes[1] == 1:
-        b = args[1]
-    elif modes[1] == 2:
-        b = i.get(args[1]+i.relative)
-    c = args[2]+i.relative if modes[2] == 2 else args[2]
-    i.set(c, a + b)
+    i.set(modes[2], i.get(modes[0]) + i.get(modes[1]))
 def mul(i, args, modes):
-    if modes[0] == 0:
-        a = i.get(args[0])
-    elif modes[0] == 1:
-        a = args[0]
-    elif modes[0] == 2:
-        a = i.get(args[0]+i.relative)
-    if modes[1] == 0:
-        b = i.get(args[1])
-    elif modes[1] == 1:
-        b = args[1]
-    elif modes[1] == 2:
-        b = i.get(args[1]+i.relative)
-    c = args[2]+i.relative if modes[2] == 2 else args[2]
-    i.set(c, a * b)
+    i.set(modes[2], i.get(modes[0]) * i.get(modes[1]))
 def inp(i, args, modes):
     if len(i.inp) > 0:
-        c = args[0]+i.relative if modes[0] == 2 else args[0]
-        i.set(c, i.inp.pop(0))
+        i.set(modes[0], i.inp.pop(0))
     else:
         return True
 def out(i, args, modes):
-    if modes[0] == 0:
-        a = i.get(args[0])
-    elif modes[0] == 1:
-        a = args[0]
-    elif modes[0] == 2:
-        a = i.get(args[0]+i.relative)
-    i.out.append(a)
+    i.out.append(i.get(modes[0]))
 def jif(i, args, modes):
-    if modes[0] == 0:
-        a = i.get(args[0])
-    elif modes[0] == 1:
-        a = args[0]
-    elif modes[0] == 2:
-        a = i.get(args[0]+i.relative)
-    if modes[1] == 0:
-        b = i.get(args[1])
-    elif modes[1] == 1:
-        b = args[1]
-    elif modes[1] == 2:
-        b = i.get(args[1]+i.relative)
-    if a != 0:
-        i.pointer = b
+    if i.get(modes[0]) != 0:
+        i.pointer = i.get(modes[1])
         i.skip = False
 def jit(i, args, modes):
-    if modes[0] == 0:
-        a = i.get(args[0])
-    elif modes[0] == 1:
-        a = args[0]
-    elif modes[0] == 2:
-        a = i.get(args[0]+i.relative)
-    if modes[1] == 0:
-        b = i.get(args[1])
-    elif modes[1] == 1:
-        b = args[1]
-    elif modes[1] == 2:
-        b = i.get(args[1]+i.relative)
-    if a == 0:
-        i.pointer = b
+    if i.get(modes[0]) == 0:
+        i.pointer = i.get(modes[1])
         i.skip = False
 def le(i, args, modes):
-    if modes[0] == 0:
-        a = i.get(args[0])
-    elif modes[0] == 1:
-        a = args[0]
-    elif modes[0] == 2:
-        a = i.get(args[0]+i.relative)
-    if modes[1] == 0:
-        b = i.get(args[1])
-    elif modes[1] == 1:
-        b = args[1]
-    elif modes[1] == 2:
-        b = i.get(args[1]+i.relative)
-    c = args[2]+i.relative if modes[2] == 2 else args[2]
-    if a < b:
-        i.set(c, 1)
+    if i.get(modes[0]) < i.get(modes[1]):
+        i.set(modes[2], 1)
     else:
-        i.set(c, 0)
+        i.set(modes[2], 0)
 def eq(i, args, modes):
-    if modes[0] == 0:
-        a = i.get(args[0])
-    elif modes[0] == 1:
-        a = args[0]
-    elif modes[0] == 2:
-        a = i.get(args[0]+i.relative)
-    if modes[1] == 0:
-        b = i.get(args[1])
-    elif modes[1] == 1:
-        b = args[1]
-    elif modes[1] == 2:
-        b = i.get(args[1]+i.relative)
-    c = args[2]+i.relative if modes[2] == 2 else args[2]
-    if a == b:
-        i.set(c, 1)
+    if i.get(modes[0]) == i.get(modes[1]):
+        i.set(modes[2], 1)
     else:
-        i.set(c, 0)
+        i.set(modes[2], 0)
 def rel(i, args, modes):
-    if modes[0] == 0:
-        a = i.get(args[0])
-    elif modes[0] == 1:
-        a = args[0]
-    elif modes[0] == 2:
-        a = i.get(args[0]+i.relative)
-    i.relative += a
+    i.relative += i.get(modes[0])
 
 OPCODES = {1: [add, 3],
            2: [mul, 3],
@@ -148,39 +59,50 @@ class IntCode:
         self.memory[i] = x
     
     def get(self, i):
-        if i not in self.memory:
+        if i < 0:
+            raise Exception(f"Attempted to access negative memory address {i}")
+        elif i not in self.memory:
             return 0
         else:
             return self.memory[i]
-    
-    def on_input_update(self):
-        if not self.running:
-            self.start()
     
     def start(self, inp=[]):
         self.inp += inp
         self.out = []
         self.running = True
-        while self.pointer in self.memory:
-            code, opcode = divmod(self.memory[self.pointer], 100)
-            if opcode == 99:
-                self.hashalted = True
+        while self.running and self.pointer in self.memory:
+            if self.step():
                 break
-            elif opcode not in self.ops:
-                raise Exception(f"Invalid opcode {opcode}")
-            else:
-                func, numargs = self.ops[opcode]
-                args = [self.memory.get(i) for i in range(self.pointer+1, self.pointer+numargs+1)]
-                modes = []
-                for i in range(numargs):
-                    code, d = divmod(code, 10)
-                    modes.append(d)
-                if func(self, args, modes):
-                    break
-                else:
-                    if self.skip:
-                        self.pointer += numargs + 1
-                    else:
-                        self.skip = True
         self.running = False
         return self.out
+    
+    def step(self):
+        code, opcode = divmod(self.memory[self.pointer], 100)
+        if opcode == 99:
+            self.hashalted = True
+            return True
+        elif opcode not in self.ops:
+            raise Exception(f"Invalid opcode {opcode}")
+        else:
+            func, numargs = self.ops[opcode]
+            args = []
+            with_modes = []
+            for i in range(numargs):
+                code, d = divmod(code, 10)
+                args.append(self.memory.get(self.pointer+i+1))
+                if d == 0:
+                    with_modes.append(args[i])
+                elif d == 1:
+                    with_modes.append(self.pointer+i+1)
+                elif d == 2:
+                    with_modes.append(args[i] + self.relative)
+                else:
+                    raise Exception(f"Invalid mode {d}")
+            if func(self, args, with_modes):
+                return True
+            else:
+                if self.skip:
+                    self.pointer += numargs + 1
+                else:
+                    self.skip = True
+        return False
