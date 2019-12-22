@@ -1,3 +1,5 @@
+import time
+
 def egcd(a, b):
     if a == 0:
         return (b, 0, 1)
@@ -48,6 +50,7 @@ class LinearModuloFunction:
         newconstant = (pow(self.coefficient, val, self.base) - 1) * modinv(self.coefficient - 1, self.base) * self.constant
         return LinearModuloFunction(self.base, newconstant % self.base, newcoefficient % self.base)
 
+start = time.time()
 BASE = 10007
 
 current_function = LinearModuloFunction(BASE)  # Identity function (0 + 1x)
@@ -61,3 +64,4 @@ with open("dec22/input.txt", "r") as file:
             current_function *= LinearModuloFunction(BASE, -1, -1)
 
 print(current_function(2019))
+print("Time:", time.time()-start)
