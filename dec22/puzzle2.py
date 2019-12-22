@@ -1,5 +1,3 @@
-import time
-
 def egcd(a, b):
     if a == 0:
         return (b, 0, 1)
@@ -48,7 +46,6 @@ class ModuloLinearFunction:
         newconstant = (pow(self.coefficient, val, self.base) - 1) * modinv(self.coefficient - 1, self.base) * self.constant
         return ModuloLinearFunction(self.base, newconstant, newcoefficient)
 
-start = time.time()
 BASE = 119315717514047
 
 current_function = ModuloLinearFunction(BASE)  # Identity function (0 + 1x)
@@ -64,4 +61,3 @@ with open("dec22/input.txt", "r") as file:
 current_function **= 101741582076661
 a, b = current_function.constant, current_function.coefficient
 print(((2020-a)*modinv(b, BASE))%BASE)
-print("Time:", time.time()-start)
