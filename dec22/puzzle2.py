@@ -54,7 +54,7 @@ def main():
     with open("dec22/input.txt", "r") as file:
         for line in file.readlines():
             if "cut" in line:
-                current_function *= ModuloLinearFunction(BASE, int(line.strip()[4:]))
+                current_function *= ModuloLinearFunction(BASE, -int(line.strip()[4:]))
             elif "deal with increment" in line:
                 current_function *= int(line.strip()[20:])
             else:
@@ -64,4 +64,4 @@ def main():
     return ((2020-a)*modinv(b, BASE)) % BASE
 
 print(main())
-print(timeit.timeit(main, number=100))
+print(timeit.timeit(main, number=1000)/1000)

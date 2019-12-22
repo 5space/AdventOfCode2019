@@ -64,4 +64,4 @@ def main():
     return current_function(2019)
 
 print(main())
-print(timeit.timeit(main, number=100))
+print(timeit.timeit(main, number=1000)/1000)
