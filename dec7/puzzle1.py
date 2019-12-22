@@ -20,9 +20,12 @@ def main():
         ic_e = IntCode(memory.copy(), inp=[e])
         ics = [ic_a, ic_b, ic_c, ic_d, ic_e]
         for ic in ics:
-            currinput = ics[index].start(currinput).copy()
+            ics[index].inp += currinput
+            ics[index].start()
+            currinput = ics[index].popout()
             index = (index + 1) % 5
-        ic_a.start([0])
+        ic_a.inp.append(0)
+        ic_a.start()
         m = max(m, currinput[0])
     return m
 

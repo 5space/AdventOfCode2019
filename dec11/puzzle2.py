@@ -16,11 +16,11 @@ while True:
         color = grid[x, y]
     else:
         color = 0
-    ic.start(inp=[color])
+    ic.inp.append(color)
+    ic.start()
     if len(ic.out) < 2:
         break
-    newcolor, direction = ic.out
-    ic.out = []
+    newcolor, direction = ic.popout()
     grid[x, y] = newcolor
     if direction == 0:
         d = (d-1)%4

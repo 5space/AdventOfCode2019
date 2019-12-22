@@ -6,5 +6,6 @@ with open("dec5/input.txt", "r") as file:
     field = list(map(int, file.read().split(",")))
 
 ic = IntCode(field)
-f = ic.start([5])
-print(f[-1])
+ic.inp.append(5)
+ic.start()
+print(ic.out[-1])

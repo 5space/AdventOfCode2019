@@ -38,11 +38,13 @@ while True:
         joystick = 1
     else:
         joystick = 0
-    ic.start(inp=[joystick])
+    ic.inp.append(joystick)
+    ic.start()
     if len(ic.out) == 0:
         break
-    for i in range(0, len(ic.out), 3):
-        x, y, tile = ic.out[i:i+3]
+    out = ic.popout()
+    for i in range(0, len(out), 3):
+        x, y, tile = out[i:i+3]
         if x == -1 and y == 0:
             print("score", tile)
         else:
@@ -55,7 +57,6 @@ while True:
     images.append(img)
     raw_str = img2.tobytes("raw", "RGB")
     pg = pygame.image.fromstring(raw_str, (440, 240), "RGB")
-    ic.out = []
     screen.blit(pg, (0, 0))
     pygame.event.pump()
     if len(images) % 10 == 0:
