@@ -1,3 +1,5 @@
+import timeit
+
 def egcd(a, b):
     if a == 0:
         return (b, 0, 1)
@@ -48,16 +50,18 @@ class LinearModuloFunction:
         newconstant = (pow(self.coefficient, val, self.base) - 1) * modinv(self.coefficient - 1, self.base) * self.constant
         return LinearModuloFunction(self.base, newconstant % self.base, newcoefficient % self.base)
 
-BASE = 10007
+def main():
+    BASE = 10007
+    current_function = LinearModuloFunction(BASE)  # Identity function (0 + 1x)
+    with open("dec22/input.txt", "r") as file:
+        for line in file.readlines():
+            if "cut" in line:
+                current_function *= LinearModuloFunction(BASE, -int(line.strip().split(" ")[-1]))
+            elif "deal with increment" in line:
+                current_function *= int(line.strip().split(" ")[-1])
+            else:
+                current_function *= LinearModuloFunction(BASE, -1, -1)
+    return current_function(2019)
 
-current_function = LinearModuloFunction(BASE)  # Identity function (0 + 1x)
-with open("dec22/input.txt", "r") as file:
-    for line in file.readlines():
-        if "cut" in line:
-            current_function *= LinearModuloFunction(BASE, -int(line.strip().split(" ")[-1]))
-        elif "deal with increment" in line:
-            current_function *= int(line.strip().split(" ")[-1])
-        else:
-            current_function *= LinearModuloFunction(BASE, -1, -1)
-
-print(current_function(2019))
+print(main())
+print(timeit.timeit(main, number=100))
