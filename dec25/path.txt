@@ -1,0 +1,33 @@
+south
+take spool of cat6
+west
+take space heater
+south
+take shell
+north
+north
+take weather machine
+west
+south
+south
+take space law space brochure
+north
+east
+take candy cane
+west
+north
+east
+north
+west
+west
+take whirled peas
+east
+east
+south
+south
+east
+east
+south
+take hypercube
+south
+south

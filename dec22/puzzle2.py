@@ -1,20 +1,5 @@
 import timeit
 
-def egcd(a, b):
-    if a == 0:
-        return (b, 0, 1)
-    else:
-        g, y, x = egcd(b % a, a)
-        return (g, x - (b // a) * y, y)
-
-def modinv(a, m):
-    g, x, y = egcd(a, m)
-    if g != 1:
-        print(a, m)
-        raise Exception('modular inverse does not exist')
-    else:
-        return x % m
-
 class ModuloLinearFunction:
 
     #form a + bn
@@ -45,7 +30,7 @@ class ModuloLinearFunction:
     
     def __pow__(self, val):
         newcoefficient = pow(self.coefficient, val, self.base)
-        newconstant = (pow(self.coefficient, val, self.base) - 1) * modinv(self.coefficient - 1, self.base) * self.constant
+        newconstant = (pow(self.coefficient, val, self.base) - 1) * pow(self.coefficient - 1, -1, self.base) * self.constant
         return ModuloLinearFunction(self.base, newconstant, newcoefficient)
 
 def main():
@@ -61,7 +46,7 @@ def main():
                 current_function *= ModuloLinearFunction(BASE, -1, -1)
     current_function **= 101741582076661
     a, b = current_function.constant, current_function.coefficient
-    return ((2020-a)*modinv(b, BASE)) % BASE
+    return ((2020-a) * pow(b, -1, BASE)) % BASE
 
 print(main())
 print(timeit.timeit(main, number=1000)/1000)
